@@ -3,7 +3,9 @@ const inputFile = "datafile.csv";
 const outputFile = "outputfile.csv"; 
 
 function parseFile(inputFile, outputFile, delimiter = ';') {
-
+  if (!fs.existsSync(inputFile)) {
+    return -1;
+  }
   if (fs.existsSync(outputFile)) {
     fs.unlinkSync(outputFile);
   }
