@@ -1,38 +1,32 @@
 const fs = require('fs');
-
-const outputFile = "outputfile.csv";
 const inputFile = "datafile.csv";
+const outputFile = "outputfile.csv"; 
 
-function parseFile(indata, outdata, delimiter = ';') {
-  if (fs.existsSync(outdata)) {
-    fs.unlinkSync(outdata);
+function parseFile(inputFile, outputFile, delimiter = ';') {
+
+  if (fs.existsSync(outputFile)) {
+    fs.unlinkSync(outputFile);
   }
+  const data = fs.readFileSync(inputFile, "utf-8");
+  const lines = data.split(/\n/).slice(1); 
 
-  const data = fs.readFileSync(indata, "utf-8");
-  const reviewDictionary = {};
-  const lines = data.split(delimiter);
-
+  let totalRecords = 0;
   for (let line of lines) {
     const trimmedLine = line.trim();
     if (!trimmedLine) continue;
 
-    // Split by colon instead of semicolon
-    const [review, sentiment] = trimmedLine.split(':');
-    if (review && sentiment) {
-      reviewDictionary[sentiment.trim()] = review.trim();
-    }
-  }
+    const elements = trimmedLine.split(delimiter);
+    if (elements.length < 2) continue; 
 
-  // Print the dictionary
-  for (const [sentiment, review] of Object.entries(reviewDictionary)) {
-    const outputLine = `${sentiment} : ${review}\n`;
-    console.log(outputLine); // Print each line
+    const review = elements[0].trim();
+    const sentiment = elements[1].trim();
+    const outputLine = `${sentiment}${delimiter}${shortReview}\n`;
+    fs.appendFileSync(outputFile, outputLine);
+    totalRecords++;
   }
+  return totalRecords; 
 }
-
-parseFile(inputFile, outputFile);
-
-
+console.log(parseFile(inputFile, outputFile));
 
 
 // Leave this code here for the automated tests
