@@ -6,22 +6,19 @@ function parseFile(inputFile, outputFile, delimiter = ';') {
   if (!fs.existsSync(inputFile)) {
     return -1;
   }
+
   //Deleting any existing output file
   if (fs.existsSync(outputFile)) {
     fs.unlinkSync(outputFile);
   }
-  const data = fs.readFileSync(inputFile, "utf-8");
-  //Getting rid of any headers while seperating reviews
-  const lines = data.split(/\n/).slice(1); 
+
+  const lines = fs.readFileSync(inputFile, "utf-8").split(/\n/).slice(1); //Getting rid of any headers while seperating reviews
   let totalRecords = 0;
 
   for (let line of lines) {
-    const trimmedLine = line.trim();
-    const elements = trimmedLine.split(delimiter); //Cutting off at the semi colon
-    const review = elements[0].trim(); 
-    const sentiment = elements[1].trim();
-    const shortReview = review.substring(0, 20);//Making reviews 20 characters max
-    const outputLine = `${sentiment}${delimiter}${shortReview}\n`;
+    const elements = line.trim().split(delimiter); //Cutting off at the semi colon
+    const outputLine = `${elements[1].trim()}${delimiter}${elements[0].trim().substring(0, 20)}\n`;
+
     fs.appendFileSync(outputFile, outputLine);
     totalRecords++;
   }
