@@ -20,6 +20,7 @@ function parseFile(inputFile, outputFile, delimiter = ';') {
 
     const review = elements[0].trim();
     const sentiment = elements[1].trim();
+    const shortReview = review.substring(0, 20);
     const outputLine = `${sentiment}${delimiter}${shortReview}\n`;
     fs.appendFileSync(outputFile, outputLine);
     totalRecords++;
